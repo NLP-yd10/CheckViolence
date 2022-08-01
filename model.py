@@ -35,6 +35,17 @@ class Models():
                              )
         self.model = model.to(self.device)
 
+    def KRBERT(self):
+        self.model = model = BertForSequenceClassification.from_pretrained(
+                                "snunlp/KR-BERT-char16424",    # Use the 12-layer BERT model, with an uncased vocab.
+                                num_labels = self.num_labels,   # The number of output labels--2 for binary classification.
+                                                                # You can increase this for multi-class tasks.   
+                                output_attentions = False,  # Whether the model returns attentions weights.
+                                output_hidden_states = False,   # Whether the model returns all hidden-states.
+                                return_dict = False,
+                             )
+        self.model = model.to(self.device)    
+
         # Note: AdamW is a class from the huggingface library (as opposed to pytorch) 
         # I believe the 'W' stands for 'Weight Decay fix"
         self.optimizer = torch.optim.AdamW(self.model.parameters(),
@@ -420,7 +431,18 @@ class Models():
             return_dict = False,
         )
 
+    def load_krmodel(self):
+        model = BertForSequenceClassification.from_pretrained(
+            "snunlp/KR-BERT-char16424", # Use the 12-layer BERT model, with an uncased vocab.
+            num_labels = 2, # The number of output labels--2 for binary classification.
+                            # You can increase this for multi-class tasks.   
+            output_attentions = False, # Whether the model returns attentions weights.
+            output_hidden_states = False, # Whether the model returns all hidden-states.
+            return_dict = False,
+        )
+
         tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+        tokenizer_kr = BertTokenizer.from_pretrained("snunlp/KR-BERT-char16424")
 
         output_dir = filedialog.askdirectory(initialdir = "/", title = "Please select a directory")
         print("directory path : ", output_dir)
