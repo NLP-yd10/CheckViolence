@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     # krbert 모델
     # 모델 생성, 학습, 모델 저장
-    model_k = Models(num_labels = 2)
+    model_k = Models_kr(num_labels = 2)
     dataset = Dataset_kr()
     dataset.set_dataset('train')    # train dataset load
     dataset.set_dataset('test')     # test dataset load
