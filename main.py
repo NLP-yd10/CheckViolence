@@ -2,6 +2,7 @@ from utils import check_gpu
 from dataloader import Dataset
 from dataloaderkr import Dataset_kr
 from model import Models
+from modelkr import Models_kr
 
 if __name__ == '__main__':
 
