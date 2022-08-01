@@ -13,27 +13,26 @@ import datetime
 import os
 
 from utils import check_gpu, format_time, flat_accuracy
-from dataloader import Dataset
+from dataloaderkr import Dataset_kr
 
 
-class Models():
+class Models_kr():
     def __init__(self, num_labels):
         self.num_labels = num_labels
         self.device = check_gpu()
-        self.dataset = Dataset()
+        self.dataset = Dataset_kr()
         self.tokenizer = self.dataset.tokenizer
 
-    
-    def BERT(self):
+    def KRBERT(self):
         self.model = model = BertForSequenceClassification.from_pretrained(
-                                "bert-base-uncased",    # Use the 12-layer BERT model, with an uncased vocab.
+                                "snunlp/KR-BERT-char16424",    # Use the 12-layer BERT model, with an uncased vocab.
                                 num_labels = self.num_labels,   # The number of output labels--2 for binary classification.
                                                                 # You can increase this for multi-class tasks.   
                                 output_attentions = False,  # Whether the model returns attentions weights.
                                 output_hidden_states = False,   # Whether the model returns all hidden-states.
                                 return_dict = False,
                              )
-        self.model = model.to(self.device)
+        self.model = model.to(self.device)    
 
         # Note: AdamW is a class from the huggingface library (as opposed to pytorch) 
         # I believe the 'W' stands for 'Weight Decay fix"
@@ -42,12 +41,12 @@ class Models():
                             eps = 1e-8 # args.adam_epsilon  - default is 1e-8.
                          )
 
-    # 현재는 BERT로 작성되어 있음, 모델 추가시 수정 필요
+    # 현재는 KRBERT로 작성되어 있음, 모델 추가시 수정 필요
     def about_model(self):
         # Get all of the model's parameters as a list of tuples.
         params = list(self.model.named_parameters())
 
-        print('The BERT model has {:} different named parameters.\n'.format(len(params)))
+        print('The KRBERT model has {:} different named parameters.\n'.format(len(params)))
 
         print('==== Embedding Layer ====\n')
 
@@ -412,7 +411,7 @@ class Models():
 
     def load_model(self):
         model = BertForSequenceClassification.from_pretrained(
-            "bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
+            "snunlp/KR-BERT-char16424", # Use the 12-layer BERT model, with an uncased vocab.
             num_labels = 2, # The number of output labels--2 for binary classification.
                             # You can increase this for multi-class tasks.   
             output_attentions = False, # Whether the model returns attentions weights.
@@ -420,13 +419,13 @@ class Models():
             return_dict = False,
         )
 
-        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+        tokenizer_kr = BertTokenizer.from_pretrained("snunlp/KR-BERT-char16424")
 
         output_dir = filedialog.askdirectory(initialdir = "/", title = "Please select a directory")
         print("directory path : ", output_dir)
         # Load a trained model and vocabulary that you have fine-tuned
         self.model = model.from_pretrained(output_dir)
-        tokenizer = tokenizer.from_pretrained(output_dir)
+        tokenizer = tokenizer_kr.from_pretrained(output_dir)
 
         # Copy the model to the GPU.
         self.model.to(self.device)
